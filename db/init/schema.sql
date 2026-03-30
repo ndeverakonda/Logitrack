@@ -1,13 +1,13 @@
-CREATE TABLE warehouse(
-                          warehouse_id BIGINT PRIMARY KEY,
-                          location VARCHAR(255) NOT NULL,
-                          capacity INT NOT NULL,
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+CREATE TABLE IF NOT EXISTS warehouse(
+                                        warehouse_id BIGINT PRIMARY KEY,
+                                        location VARCHAR(255) NOT NULL,
+    capacity INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
 
 CREATE TABLE IF NOT EXISTS item (
-    item_id BIGINT PRIMARY KEY,
-    item_name VARCHAR(255) NOT NULL,
+                                    item_id BIGINT PRIMARY KEY,
+                                    item_name VARCHAR(255) NOT NULL,
     warehouse_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS item (
     REFERENCES warehouse(warehouse_id)
     ON DELETE CASCADE
     );
-
 
 CREATE TABLE IF NOT EXISTS sensor (
                                       sensor_id BIGINT PRIMARY KEY,

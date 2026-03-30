@@ -1,51 +1,58 @@
 package com.logitrack.model;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class SensorReading {
-    String deviceId;
-    String warehouseId;
 
-    float latitude;
-    float longitude;
-    float humidity;
-    boolean tamperDetected;
-    LocalDateTime timestamp;
+    private final Long readingId;
+    private final Long sensorId;
+    private final double latitude;
+    private final double longitude;
+    private final double humidity;
+    private final boolean tamperDetected;
+    private final LocalDateTime recordedAt;
 
-    public SensorReading(String deviceId, String warehouseId, float latitude, float longitude, float humidity, boolean tamperDetected, LocalDateTime timestamp) {
-        this.deviceId=deviceId;
-        this.warehouseId=warehouseId;
-        this.latitude=latitude;
-        this.longitude=longitude;
-        this.humidity=humidity;
-        this.tamperDetected=tamperDetected;
-        this.timestamp=timestamp;
-    }
-
-    public String getDeviceId(){
-        return this.deviceId;
-    }
-    public String getWarehouseId(){
-        return this.warehouseId;
-    }
-    public float getLatitude(){
-        return this.latitude;
-    }
-    public float getLongitude(){
-        return this.longitude;
-    }
-    public float getHumidity(){
-return this.humidity;
-    }
-    public boolean isTamperDetected(){
-        return this.tamperDetected;
-    }
-    public LocalDateTime getTimestamp(){
-        return this.timestamp;
+    public SensorReading(Long readingId,
+                         Long sensorId,
+                         double latitude,
+                         double longitude,
+                         double humidity,
+                         boolean tamperDetected,
+                         LocalDateTime recordedAt) {
+        this.readingId = readingId;
+        this.sensorId = sensorId;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.humidity = humidity;
+        this.tamperDetected = tamperDetected;
+        this.recordedAt = recordedAt;
     }
 
+    public Long getReadingId() {
+        return readingId;
+    }
 
+    public Long getSensorId() {
+        return sensorId;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getHumidity() {
+        return humidity;
+    }
+
+    public boolean isTamperDetected() {
+        return tamperDetected;
+    }
+
+    public LocalDateTime getRecordedAt() {
+        return recordedAt;
+    }
 }
-
-
