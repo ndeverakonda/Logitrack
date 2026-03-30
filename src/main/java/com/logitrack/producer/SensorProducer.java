@@ -6,43 +6,45 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 
-public class SensorProducer implements Runnable{
-    String deviceId;
-    String warehouseId;
-    BlockingQueue<SensorReading> queue;
-    Random random;
+public class SensorProducer implements Runnable {
 
-    public void run(){
+    private final BlockingQueue<SensorReading> queue;
+    private final Long sensorId;
+    private final Random random = new Random();
+
+    public SensorProducer(BlockingQueue<SensorReading> queue, Long sensorId) {
+        this.queue = queue;
+        this.sensorId = sensorId;
+    }
+
+    @Override
+    public void run() {
         while (true) {
-            //generate reading
-            SensorReading randReading = generateReading();
             try {
-                queue.put(randReading);
+                SensorReading reading = generateReading();
+                queue.put(reading);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-            //log message
-            System.out.println("Reading generated for Device ID: " + deviceId);
-
-            //sleep
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                Thread.currentThread().interrupt();
+                break;
             }
         }
-        //REPEAT
-
     }
-    public SensorReading generateReading(){
 
-        float latitude=random.nextFloat();
-        float longitude=random.nextFloat();
-        float humidity=random.nextFloat();
-        boolean tamperDetected= random.nextBoolean();
-        LocalDateTime timestamp=LocalDateTime.now();
+    private SensorReading generateReading() {
+        double latitude = 17.3850 + (random.nextDouble() / 100);
+        double longitude = 78.4867 + (random.nextDouble() / 100);
+        double humidity = 50 + (random.nextDouble() * 40);
+        boolean tamperDetected = random.nextInt(10) == 0;
 
-        return new SensorReading(deviceId,warehouseId,latitude,longitude,humidity,tamperDetected,timestamp);
+        return new SensorReading(
+                null,
+                sensorId,
+                latitude,
+                longitude,
+                humidity,
+                tamperDetected,
+                LocalDateTime.now()
+        );
     }
 }

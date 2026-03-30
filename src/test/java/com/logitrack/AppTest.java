@@ -1,4 +1,4 @@
-package org.example;
+package com.logitrack;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
