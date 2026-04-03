@@ -20,6 +20,9 @@ public class SensorConsumer implements Runnable {
         while (true) {
             try {
                 SensorReading reading = queue.take();
+                System.out.println(Thread.currentThread().getName()
+                        + " consumed reading for sensor "
+                        + reading.getSensorId());
                 sensorService.processReading(reading);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();

@@ -47,12 +47,12 @@ public class JdbcTemplate {
 
             bindArguments(preparedStatement, args);
 
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) { //store results query returns data
                 if (!resultSet.next()) {
                     return null;
                 }
 
-                T result = mapper.apply(resultSet);
+                T result = mapper.apply(resultSet); //convert datatype to T
 
                 if (resultSet.next()) {
                     throw new IncorrectResultSizeException(

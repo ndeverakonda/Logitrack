@@ -23,6 +23,11 @@ public class SensorProducer implements Runnable {
             try {
                 SensorReading reading = generateReading();
                 queue.put(reading);
+
+                System.out.println(Thread.currentThread().getName()
+                        + " produced reading for sensor "
+                        + reading.getSensorId()
+                        + " humidity=" + reading.getHumidity());
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
