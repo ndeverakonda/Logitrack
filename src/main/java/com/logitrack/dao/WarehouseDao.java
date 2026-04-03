@@ -53,17 +53,6 @@ public class WarehouseDao {
         return jdbcTemplate.findMany(sql, this::mapRow);
     }
 
-    public Warehouse findByIdWithItems(Long warehouseId) {
-        Warehouse warehouse = findById(warehouseId);
-
-        if (warehouse == null) {
-            return null;
-        }
-
-        warehouse.setItems(itemDao.findByWarehouseId(warehouseId));
-        return warehouse;
-    }
-
     private Warehouse mapRow(ResultSet rs) {
         try {
             return new Warehouse(

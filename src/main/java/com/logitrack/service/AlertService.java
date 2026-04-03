@@ -27,6 +27,7 @@ public class AlertService {
                     "HIGH",
                     LocalDateTime.now()
             );
+            System.out.println("Generated humidity alert for sensor " + reading.getSensorId());
             alertDao.save(humidityAlert);
         }
 
@@ -40,6 +41,7 @@ public class AlertService {
                     "CRITICAL",
                     LocalDateTime.now()
             );
+            System.out.println("Generated tamper alert for sensor " + reading.getSensorId());
             alertDao.save(tamperAlert);
         }
     }

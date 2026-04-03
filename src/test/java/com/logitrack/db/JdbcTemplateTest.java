@@ -1,86 +1,74 @@
 package com.logitrack.db;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import com.logitrack.BaseTest;
 import org.junit.jupiter.api.Test;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JdbcTemplateTest {
+class JdbcTemplateTest extends BaseTest {
 
-    private static DataSource dataSource;
-    private JdbcTemplate jdbcTemplate;
+    @Test
+    void execute_withVarargs_shouldInsertRow() {
+        jdbcTemplate.execute(
+                "INSERT INTO sensor_configuration (sensor_id, humidity_threshold, tamper_monitoring_enabled, reporting_interval_seconds, updated_at) VALUES (?, ?, ?, ?, ?)",
+                101L, 70.0, true, 30, new Timestamp(System.currentTimeMillis())
+        );
 
-    @BeforeAll
-    static void beforeAll() {
-        dataSource = TestDatabaseSupport.createDataSource();
-        TestDatabaseSupport.runScript(dataSource, "db/schema.sql");
-    }
+        Double threshold = jdbcTemplate.findOne(
+                "SELECT humidity_threshold FROM sensor_configuration WHERE sensor_id = ?",
+                rs -> getDouble(rs, "humidity_threshold"),
+                101L
+        );
 
-    @BeforeEach
-    void setUp() {
-        jdbcTemplate = new JdbcTemplate(new DataSourceConnectionProvider(dataSource));
-
-        jdbcTemplate.execute("DELETE FROM alert");
-        jdbcTemplate.execute("DELETE FROM sensor_configuration");
-        jdbcTemplate.execute("DELETE FROM sensor_reading");
-        jdbcTemplate.execute("DELETE FROM sensor");
-        jdbcTemplate.execute("DELETE FROM item");
-        jdbcTemplate.execute("DELETE FROM warehouse");
-
-        TestDatabaseSupport.runScript(dataSource, "db/test-data.sql");
+        assertEquals(70.0, threshold);
     }
 
     @Test
-    void execute_shouldInsertRow_withVarargs() {
+    void execute_withConsumer_shouldInsertRow() {
         jdbcTemplate.execute(
-                "INSERT INTO warehouse (warehouse_id, location, capacity) VALUES (?, ?, ?)",
-                3L, "Chennai Warehouse", 200
-        );
-
-        Long id = jdbcTemplate.findOne(
-                "SELECT warehouse_id FROM warehouse WHERE warehouse_id = ?",
-                rs -> getLong(rs, "warehouse_id"),
-                3L
-        );
-
-        assertEquals(3L, id);
-    }
-
-    @Test
-    void execute_shouldInsertRow_withConsumer() {
-        jdbcTemplate.execute(
-                "INSERT INTO warehouse (warehouse_id, location, capacity) VALUES (?, ?, ?)",
+                "INSERT INTO sensor_configuration (sensor_id, humidity_threshold, tamper_monitoring_enabled, reporting_interval_seconds, updated_at) VALUES (?, ?, ?, ?, ?)",
                 ps -> {
                     try {
-                        ps.setLong(1, 4L);
-                        ps.setString(2, "Pune Warehouse");
-                        ps.setInt(3, 150);
+                        ps.setLong(1, 102L);
+                        ps.setDouble(2, 65.0);
+                        ps.setBoolean(3, true);
+                        ps.setInt(4, 60);
+                        ps.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
                     } catch (SQLException e) {
-                        throw new DatabaseException("Statement configuration failed", e);
+                        throw new DatabaseException("Failed to configure statement", e);
                     }
                 }
         );
 
-        Integer count = jdbcTemplate.findOne(
-                "SELECT COUNT(*) AS cnt FROM warehouse WHERE warehouse_id = ?",
-                rs -> getInt(rs, "cnt"),
-                4L
+        Integer interval = jdbcTemplate.findOne(
+                "SELECT reporting_interval_seconds FROM sensor_configuration WHERE sensor_id = ?",
+                rs -> getInt(rs, "reporting_interval_seconds"),
+                102L
         );
 
-        assertEquals(1, count);
+        assertEquals(60, interval);
+    }
+
+    @Test
+    void execute_shouldThrowDatabaseException_onConstraintViolation() {
+        assertThrows(DatabaseException.class, () ->
+                jdbcTemplate.execute(
+                        "INSERT INTO sensor (sensor_id, warehouse_id, status, last_active_at, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+                        101L, 1L, "ACTIVE"
+                )
+        );
     }
 
     @Test
     void findOne_shouldReturnNull_whenNoRowsFound() {
-        String result = jdbcTemplate.findOne(
-                "SELECT location FROM warehouse WHERE warehouse_id = ?",
-                rs -> getString(rs, "location"),
+        Long result = jdbcTemplate.findOne(
+                "SELECT sensor_id FROM sensor WHERE sensor_id = ?",
+                rs -> getLong(rs, "sensor_id"),
                 999L
         );
 
@@ -88,7 +76,7 @@ class JdbcTemplateTest {
     }
 
     @Test
-    void findOne_shouldReturnMappedObject_whenExactlyOneRowExists() {
+    void findOne_shouldReturnMappedValue_whenExactlyOneRowExists() {
         String result = jdbcTemplate.findOne(
                 "SELECT location FROM warehouse WHERE warehouse_id = ?",
                 rs -> getString(rs, "location"),
@@ -99,7 +87,7 @@ class JdbcTemplateTest {
     }
 
     @Test
-    void findOne_shouldThrow_whenMoreThanOneRowExists() {
+    void findOne_shouldThrowIncorrectResultSizeException_whenMoreThanOneRowExists() {
         assertThrows(IncorrectResultSizeException.class, () ->
                 jdbcTemplate.findOne(
                         "SELECT location FROM warehouse",
@@ -110,34 +98,27 @@ class JdbcTemplateTest {
 
     @Test
     void findMany_shouldReturnEmptyList_whenNoRowsFound() {
-        List<String> results = jdbcTemplate.findMany(
-                "SELECT location FROM warehouse WHERE capacity > ?",
-                rs -> getString(rs, "location"),
-                9999
+        List<Long> result = jdbcTemplate.findMany(
+                "SELECT sensor_id FROM sensor WHERE warehouse_id = ?",
+                rs -> getLong(rs, "sensor_id"),
+                999L
         );
 
-        assertNotNull(results);
-        assertTrue(results.isEmpty());
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
     }
 
     @Test
     void findMany_shouldReturnAllMappedRows() {
-        List<String> results = jdbcTemplate.findMany(
-                "SELECT location FROM warehouse ORDER BY warehouse_id",
-                rs -> getString(rs, "location")
+        List<Long> result = jdbcTemplate.findMany(
+                "SELECT sensor_id FROM sensor WHERE warehouse_id = ? ORDER BY sensor_id",
+                rs -> getLong(rs, "sensor_id"),
+                1L
         );
 
-        assertEquals(2, results.size());
-        assertEquals("Hyderabad Warehouse", results.get(0));
-        assertEquals("Bengaluru Warehouse", results.get(1));
-    }
-
-    private static String getString(ResultSet rs, String column) {
-        try {
-            return rs.getString(column);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        assertEquals(2, result.size());
+        assertEquals(101L, result.get(0));
+        assertEquals(102L, result.get(1));
     }
 
     private static Long getLong(ResultSet rs, String column) {
@@ -151,6 +132,22 @@ class JdbcTemplateTest {
     private static Integer getInt(ResultSet rs, String column) {
         try {
             return rs.getInt(column);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Double getDouble(ResultSet rs, String column) {
+        try {
+            return rs.getDouble(column);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String getString(ResultSet rs, String column) {
+        try {
+            return rs.getString(column);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

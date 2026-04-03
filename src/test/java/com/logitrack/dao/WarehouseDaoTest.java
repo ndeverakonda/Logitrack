@@ -1,64 +1,59 @@
 package com.logitrack.dao;
 
-import com.logitrack.db.*;
+import com.logitrack.BaseTest;
 import com.logitrack.model.Warehouse;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class WarehouseDaoTest {
+class WarehouseDaoTest extends BaseTest {
 
-    private static DataSource ds;
-    private WarehouseDao dao;
+    @Test
+    void save_shouldInsertWarehouse() {
+        WarehouseDao dao = new WarehouseDao(jdbcTemplate, new ItemDao(jdbcTemplate));
 
-    @BeforeAll
-    static void setup() {
-        ds = TestDatabaseSupport.createDataSource();
-        TestDatabaseSupport.runScript(ds, "db/schema.sql");
-    }
+        Warehouse warehouse = new Warehouse(
+                3L,
+                "Mumbai Warehouse",
+                700,
+                LocalDateTime.now()
+        );
 
-    @BeforeEach
-    void setUpTestData() {
-        JdbcTemplate jdbcTemplate =
-                new JdbcTemplate(new DataSourceConnectionProvider(ds));
-        jdbcTemplate.execute("DELETE FROM alert");
-        jdbcTemplate.execute("DELETE FROM sensor_configuration");
-        jdbcTemplate.execute("DELETE FROM sensor_reading");
-        jdbcTemplate.execute("DELETE FROM sensor");
-        jdbcTemplate.execute("DELETE FROM item");
-        jdbcTemplate.execute("DELETE FROM warehouse");
-        TestDatabaseSupport.runScript(ds, "db/test-data.sql");
-        ItemDao itemDao = new ItemDao(jdbcTemplate);
-        dao = new WarehouseDao(jdbcTemplate, itemDao);
+        dao.save(warehouse);
+
+        Warehouse saved = dao.findById(3L);
+        assertNotNull(saved);
+        assertEquals("Mumbai Warehouse", saved.getLocation());
     }
 
     @Test
-    void shouldFindById() {
-        Warehouse w = dao.findById(1L);
-        assertNotNull(w);
-        assertEquals("Hyderabad Warehouse", w.getLocation());
+    void findById_shouldReturnWarehouse_whenExists() {
+        WarehouseDao dao = new WarehouseDao(jdbcTemplate, new ItemDao(jdbcTemplate));
+
+        Warehouse warehouse = dao.findById(1L);
+
+        assertNotNull(warehouse);
+        assertEquals("Hyderabad Warehouse", warehouse.getLocation());
     }
 
     @Test
-    void shouldReturnNullIfNotFound() {
-        assertNull(dao.findById(999L));
+    void findById_shouldReturnNull_whenNotExists() {
+        WarehouseDao dao = new WarehouseDao(jdbcTemplate, new ItemDao(jdbcTemplate));
+
+        Warehouse warehouse = dao.findById(999L);
+
+        assertNull(warehouse);
     }
 
     @Test
-    void shouldFindAll() {
-        List<Warehouse> list = dao.findAll();
-        assertEquals(2, list.size());
-    }
+    void findAll_shouldReturnAllWarehouses() {
+        WarehouseDao dao = new WarehouseDao(jdbcTemplate, new ItemDao(jdbcTemplate));
 
-    @Test
-    void shouldInsertWarehouse() {
-        Warehouse w = new Warehouse(3L, "Chennai", 150, LocalDateTime.now());
-        dao.save(w);
+        List<Warehouse> warehouses = dao.findAll();
 
-        assertNotNull(dao.findById(3L));
+        assertEquals(2, warehouses.size());
     }
 }

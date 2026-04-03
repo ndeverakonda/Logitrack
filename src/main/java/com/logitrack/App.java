@@ -14,9 +14,9 @@ import com.logitrack.service.SensorService;
 public class App {
 
     public static void main(String[] args) {
-        String url = "jdbc:postgresql://localhost:5432/logitrack";
-        String username = "postgres";
-        String password = "postgres";
+        String url = "jdbc:postgresql://localhost:5430/logitrack";
+        String username = "myuser";
+        String password = "mypassword";
 
         ConnectionProvider connectionProvider =
                 new DriverManagerConnectionProvider(url, username, password);

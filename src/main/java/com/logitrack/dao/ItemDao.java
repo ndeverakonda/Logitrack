@@ -41,17 +41,6 @@ public class ItemDao {
         return jdbcTemplate.findOne(sql, this::mapRow, itemId);
     }
 
-    public List<Item> findByWarehouseId(Long warehouseId) {
-        String sql = """
-                SELECT item_id, item_name, warehouse_id, created_at
-                FROM item
-                WHERE warehouse_id = ?
-                ORDER BY item_id
-                """;
-
-        return jdbcTemplate.findMany(sql, this::mapRow, warehouseId);
-    }
-
     public List<Item> findAll() {
         String sql = """
                 SELECT item_id, item_name, warehouse_id, created_at

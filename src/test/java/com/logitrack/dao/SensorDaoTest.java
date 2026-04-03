@@ -1,44 +1,22 @@
 package com.logitrack.dao;
 
-import com.logitrack.db.*;
+import com.logitrack.BaseTest;
 import com.logitrack.model.Sensor;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
-import javax.sql.DataSource;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SensorDaoTest {
-
-    private static DataSource ds;
-    private SensorDao dao;
-
-    @BeforeAll
-    static void setup() {
-        ds = TestDatabaseSupport.createDataSource();
-        TestDatabaseSupport.runScript(ds, "db/schema.sql");
-    }
-
-    @BeforeEach
-    void setUpTestData() {
-        JdbcTemplate jdbcTemplate =
-                new JdbcTemplate(new DataSourceConnectionProvider(ds));
-        jdbcTemplate.execute("DELETE FROM alert");
-        jdbcTemplate.execute("DELETE FROM sensor_configuration");
-        jdbcTemplate.execute("DELETE FROM sensor_reading");
-        jdbcTemplate.execute("DELETE FROM sensor");
-        jdbcTemplate.execute("DELETE FROM item");
-        jdbcTemplate.execute("DELETE FROM warehouse");
-        TestDatabaseSupport.runScript(ds, "db/test-data.sql");
-        dao = new SensorDao(jdbcTemplate);
-    }
+class SensorDaoTest extends BaseTest {
 
     @Test
-    void shouldInsertSensor() {
+    void save_shouldInsertSensor() {
+        SensorDao dao = new SensorDao(jdbcTemplate);
+
         Sensor sensor = new Sensor(
-                103L,
+                200L,
                 1L,
                 "ACTIVE",
                 LocalDateTime.now(),
@@ -47,19 +25,36 @@ class SensorDaoTest {
 
         dao.save(sensor);
 
-        Sensor result = dao.findById(103L);
-        assertNotNull(result);
-        assertEquals("ACTIVE", result.getStatus());
+        Sensor saved = dao.findById(200L);
+        assertNotNull(saved);
+        assertEquals("ACTIVE", saved.getStatus());
     }
 
     @Test
-    void shouldReturnNullIfSensorNotFound() {
-        assertNull(dao.findById(999L));
+    void findById_shouldReturnSensor_whenExists() {
+        SensorDao dao = new SensorDao(jdbcTemplate);
+
+        Sensor sensor = dao.findById(101L);
+
+        assertNotNull(sensor);
+        assertEquals(101L, sensor.getSensorId());
     }
 
     @Test
-    void shouldFindAllSensors() {
+    void findById_shouldReturnNull_whenNotExists() {
+        SensorDao dao = new SensorDao(jdbcTemplate);
+
+        Sensor sensor = dao.findById(999L);
+
+        assertNull(sensor);
+    }
+
+    @Test
+    void findAll_shouldReturnAllSensors() {
+        SensorDao dao = new SensorDao(jdbcTemplate);
+
         List<Sensor> sensors = dao.findAll();
-        assertTrue(sensors.size() >= 0);
+
+        assertEquals(3, sensors.size());
     }
 }
