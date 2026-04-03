@@ -174,8 +174,3 @@ docker compose up -d
 * Ensure the configured port is not already in use before starting Docker
 
 
-
-## Author
-
-Nishitha Deverakonda
-Java Fullstack Developer Intern
