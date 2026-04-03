@@ -30,19 +30,6 @@ CREATE TABLE IF NOT EXISTS sensor (
     ON DELETE CASCADE
     );
 
-CREATE TABLE IF NOT EXISTS sensor_configuration (
-                                                    sensor_id BIGINT PRIMARY KEY,
-                                                    humidity_threshold DOUBLE PRECISION,
-                                                    tamper_monitoring_enabled BOOLEAN,
-                                                    reporting_interval_seconds INT,
-                                                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-                                                    CONSTRAINT fk_config_sensor
-                                                    FOREIGN KEY (sensor_id)
-    REFERENCES sensor(sensor_id)
-    ON DELETE CASCADE
-    );
-
 CREATE TABLE IF NOT EXISTS sensor_reading (
                                               reading_id BIGSERIAL PRIMARY KEY,
                                               sensor_id BIGINT NOT NULL,
