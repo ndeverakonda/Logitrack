@@ -4,11 +4,13 @@
 
 Both `DriverManager` and `DataSource` are used to obtain JDBC `Connection` objects.
 
-According to the Java JDBC documentation, `DataSource` is the preferred way to obtain connections, while `DriverManager` is the older basic service for managing JDBC drivers.
+According to the Java JDBC documentation, `DataSource` is the preferred way to obtain
+connections, while `DriverManager` is the older basic service for managing JDBC drivers.
 
 ## DriverManager
 
-`DriverManager` is a class from `java.sql` that manages registered JDBC drivers and returns a `Connection` based on a JDBC URL, username, and password.
+`DriverManager` is a class from `java.sql` that manages registered JDBC drivers and
+returns a `Connection` based on a JDBC URL, username, and password.
 
 ### Advantages
 - Very simple to start with

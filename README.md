@@ -3,7 +3,8 @@
 ## Overview
 
 LogiTrack Pro is a backend system for tracking high-value electronics in warehouses.
-It simulates real-time sensor data such as GPS location, humidity, and tamper alerts, and processes it using a multi-threaded ingestion pipeline.
+It simulates real-time sensor data such as GPS location, humidity, and tamper alerts,
+and processes it using a multi-threaded ingestion pipeline.
 
 The system uses:
 
@@ -165,5 +166,3 @@ docker compose up -d
 * The system simulates sensor data; no external hardware is required
 * Seed data is optional since the application generates data dynamically
 * Ensure the configured port is not already in use before starting Docker
-
-
