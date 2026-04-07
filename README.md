@@ -165,4 +165,4 @@ docker compose up -d
 
 * The system simulates sensor data; no external hardware is required
 * Seed data is optional since the application generates data dynamically
-* Ensure the configured port is not already in use before starting Docker
+* Ensure the configured port is not already in use before starting Docker.
