@@ -5,6 +5,7 @@ import com.logitrack.dao.AlertDao;
 import com.logitrack.dao.SensorReadingDao;
 import com.logitrack.db.ConnectionProvider;
 import com.logitrack.db.DriverManagerConnectionProvider;
+import com.logitrack.db.HikariConnectionProvider;
 import com.logitrack.db.JdbcTemplate;
 import com.logitrack.producer.SensorProducer;
 import com.logitrack.queue.SensorQueueManager;
@@ -18,8 +19,8 @@ public class App {
         String username = "myuser";
         String password = "mypassword";
 
-        ConnectionProvider connectionProvider =
-                new DriverManagerConnectionProvider(url, username, password);
+        HikariConnectionProvider connectionProvider =
+                new HikariConnectionProvider(url, username, password);
 
         JdbcTemplate jdbcTemplate = new JdbcTemplate(connectionProvider);
 
@@ -33,20 +34,20 @@ public class App {
 
         Thread producer1 = new Thread(
                 new SensorProducer(queueManager.getQueue(), 101L),
-                "producer-101"
+                "Producer-1"
         );
         Thread producer2 = new Thread(
                 new SensorProducer(queueManager.getQueue(), 102L),
-                "producer-102"
+                "Producer-2"
         );
 
         Thread consumer1 = new Thread(
                 new SensorConsumer(queueManager.getQueue(), sensorService),
-                "consumer-1"
+                "Consumer-1"
         );
         Thread consumer2 = new Thread(
                 new SensorConsumer(queueManager.getQueue(), sensorService),
-                "consumer-2"
+                "Consumer-2"
         );
 
         consumer1.start();

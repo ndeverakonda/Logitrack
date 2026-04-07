@@ -15,7 +15,7 @@ public class DataSourceConnectionProvider implements ConnectionProvider {
     @Override
     public Connection getConnection() {
         try {
-            return dataSource.getConnection(); //gives a Connection everytime (if HikaruCP - gives existing connection from pool)
+            return dataSource.getConnection();
         } catch (SQLException e) {
             throw new DatabaseException("Failed to create connection using DataSource", e);
         }

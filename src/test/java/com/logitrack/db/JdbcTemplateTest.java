@@ -15,7 +15,15 @@ class JdbcTemplateTest extends BaseTest {
     @Test
     void execute_withVarargs_shouldInsertRow() {
         jdbcTemplate.execute(
-                "INSERT INTO sensor_configuration (sensor_id, humidity_threshold, tamper_monitoring_enabled, reporting_interval_seconds, updated_at) VALUES (?, ?, ?, ?, ?)",
+                """
+                        INSERT INTO sensor_configuration (
+                            sensor_id,
+                            humidity_threshold,
+                            tamper_monitoring_enabled,
+                            reporting_interval_seconds,
+                            updated_at
+                        ) VALUES (?, ?, ?, ?, ?)
+                        """,
                 101L, 70.0, true, 30, new Timestamp(System.currentTimeMillis())
         );
 
@@ -31,7 +39,15 @@ class JdbcTemplateTest extends BaseTest {
     @Test
     void execute_withConsumer_shouldInsertRow() {
         jdbcTemplate.execute(
-                "INSERT INTO sensor_configuration (sensor_id, humidity_threshold, tamper_monitoring_enabled, reporting_interval_seconds, updated_at) VALUES (?, ?, ?, ?, ?)",
+                """
+                        INSERT INTO sensor_configuration (
+                            sensor_id,
+                            humidity_threshold,
+                            tamper_monitoring_enabled,
+                            reporting_interval_seconds,
+                            updated_at
+                        ) VALUES (?, ?, ?, ?, ?)
+                        """,
                 ps -> {
                     try {
                         ps.setLong(1, 102L);
@@ -58,7 +74,15 @@ class JdbcTemplateTest extends BaseTest {
     void execute_shouldThrowDatabaseException_onConstraintViolation() {
         assertThrows(DatabaseException.class, () ->
                 jdbcTemplate.execute(
-                        "INSERT INTO sensor (sensor_id, warehouse_id, status, last_active_at, created_at) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)",
+                        """
+                                INSERT INTO sensor (
+                                    sensor_id,
+                                    warehouse_id,
+                                    status,
+                                    last_active_at,
+                                    created_at
+                                ) VALUES (?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+                                """,
                         101L, 1L, "ACTIVE"
                 )
         );

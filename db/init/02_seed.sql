@@ -62,43 +62,95 @@ INSERT INTO sensor_item_assignment VALUES
 -- SENSOR READINGS (TIME SERIES)
 -- -----------------------------------------
 -- Hyderabad
-INSERT INTO sensor_reading (sensor_id, latitude, longitude, humidity, tamper_detected, recorded_at) VALUES
-                                                                                                        (101, 17.3850, 78.4867, 65.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '30 min'),
-                                                                                                        (101, 17.3851, 78.4868, 68.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '20 min'),
-                                                                                                        (101, 17.3852, 78.4869, 72.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '10 min'),
-                                                                                                        (101, 17.3853, 78.4870, 75.5, FALSE, CURRENT_TIMESTAMP - INTERVAL '5 min'),
-
-                                                                                                        (102, 17.3854, 78.4871, 60.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '25 min'),
-                                                                                                        (102, 17.3855, 78.4872, 62.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '15 min'),
-                                                                                                        (102, 17.3856, 78.4873, 64.0, TRUE,  CURRENT_TIMESTAMP - INTERVAL '8 min');
+INSERT INTO sensor_reading (
+  sensor_id,
+  latitude,
+  longitude,
+  humidity,
+  tamper_detected,
+  recorded_at
+) VALUES
+  (101, 17.3850, 78.4867, 65.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '30 min'),
+  (101, 17.3851, 78.4868, 68.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '20 min'),
+  (101, 17.3852, 78.4869, 72.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '10 min'),
+  (101, 17.3853, 78.4870, 75.5, FALSE, CURRENT_TIMESTAMP - INTERVAL '5 min'),
+  (102, 17.3854, 78.4871, 60.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '25 min'),
+  (102, 17.3855, 78.4872, 62.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '15 min'),
+  (102, 17.3856, 78.4873, 64.0, TRUE, CURRENT_TIMESTAMP - INTERVAL '8 min');
 
 -- Bengaluru
 INSERT INTO sensor_reading VALUES
-                               (DEFAULT, 103, 12.9716, 77.5946, 70.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '20 min'),
-                               (DEFAULT, 103, 12.9717, 77.5947, 78.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '10 min'),
-                               (DEFAULT, 103, 12.9718, 77.5948, 82.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '5 min'),
+  (DEFAULT, 103, 12.9716, 77.5946, 70.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '20 min'),
+  (DEFAULT, 103, 12.9717, 77.5947, 78.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '10 min'),
+  (DEFAULT, 103, 12.9718, 77.5948, 82.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '5 min'),
 
-                               (DEFAULT, 104, 12.9720, 77.5950, 55.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '1 hour');
+  (DEFAULT, 104, 12.9720, 77.5950, 55.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '1 hour');
 
 -- Mumbai
 INSERT INTO sensor_reading VALUES
-                               (DEFAULT, 105, 19.0760, 72.8777, 66.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '30 min'),
-                               (DEFAULT, 105, 19.0761, 72.8778, 69.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '15 min'),
-                               (DEFAULT, 105, 19.0762, 72.8779, 73.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '5 min'),
+  (DEFAULT, 105, 19.0760, 72.8777, 66.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '30 min'),
+  (DEFAULT, 105, 19.0761, 72.8778, 69.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '15 min'),
+  (DEFAULT, 105, 19.0762, 72.8779, 73.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '5 min'),
 
-                               (DEFAULT, 106, 19.0763, 72.8780, 60.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '20 min'),
-                               (DEFAULT, 106, 19.0764, 72.8781, 61.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '10 min');
+  (DEFAULT, 106, 19.0763, 72.8780, 60.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '20 min'),
+  (DEFAULT, 106, 19.0764, 72.8781, 61.0, FALSE, CURRENT_TIMESTAMP - INTERVAL '10 min');
 
 -- -----------------------------------------
 -- ALERTS
 -- -----------------------------------------
-INSERT INTO alert (sensor_id, reading_id, alert_type, message, severity, created_at) VALUES
-                                                                                         (101, 3, 'HUMIDITY_HIGH', 'Humidity exceeded threshold (70%)', 'HIGH', CURRENT_TIMESTAMP - INTERVAL '9 min'),
-                                                                                         (101, 4, 'CRITICAL_HUMIDITY', 'Humidity dangerously high (>75%)', 'CRITICAL', CURRENT_TIMESTAMP - INTERVAL '4 min'),
-
-                                                                                         (102, 7, 'TAMPER_ALERT', 'Device tampering detected', 'CRITICAL', CURRENT_TIMESTAMP - INTERVAL '7 min'),
-
-                                                                                         (103, 9, 'HUMIDITY_HIGH', 'Humidity exceeded threshold in Bengaluru warehouse', 'HIGH', CURRENT_TIMESTAMP - INTERVAL '9 min'),
-                                                                                         (103, 10, 'CRITICAL_HUMIDITY', 'Humidity extremely high', 'CRITICAL', CURRENT_TIMESTAMP - INTERVAL '4 min'),
-
-                                                                                         (105, 14, 'HUMIDITY_HIGH', 'Mumbai warehouse humidity alert', 'HIGH', CURRENT_TIMESTAMP - INTERVAL '4 min');
+INSERT INTO alert (
+  sensor_id,
+  reading_id,
+  alert_type,
+  message,
+  severity,
+  created_at
+) VALUES
+  (
+    101,
+    3,
+    'HUMIDITY_HIGH',
+    'Humidity exceeded threshold (70%)',
+    'HIGH',
+    CURRENT_TIMESTAMP - INTERVAL '9 min'
+  ),
+  (
+    101,
+    4,
+    'CRITICAL_HUMIDITY',
+    'Humidity dangerously high (>75%)',
+    'CRITICAL',
+    CURRENT_TIMESTAMP - INTERVAL '4 min'
+  ),
+  (
+    102,
+    7,
+    'TAMPER_ALERT',
+    'Device tampering detected',
+    'CRITICAL',
+    CURRENT_TIMESTAMP - INTERVAL '7 min'
+  ),
+  (
+    103,
+    9,
+    'HUMIDITY_HIGH',
+    'Humidity exceeded threshold in Bengaluru warehouse',
+    'HIGH',
+    CURRENT_TIMESTAMP - INTERVAL '9 min'
+  ),
+  (
+    103,
+    10,
+    'CRITICAL_HUMIDITY',
+    'Humidity extremely high',
+    'CRITICAL',
+    CURRENT_TIMESTAMP - INTERVAL '4 min'
+  ),
+  (
+    105,
+    14,
+    'HUMIDITY_HIGH',
+    'Mumbai warehouse humidity alert',
+    'HIGH',
+    CURRENT_TIMESTAMP - INTERVAL '4 min'
+  );

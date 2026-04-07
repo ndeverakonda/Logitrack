@@ -3,7 +3,8 @@
 ## Overview
 
 LogiTrack Pro is a backend system for tracking high-value electronics in warehouses.
-It simulates real-time sensor data such as GPS location, humidity, and tamper alerts, and processes it using a multi-threaded ingestion pipeline.
+It simulates real-time sensor data such as GPS location, humidity, and tamper alerts,
+and processes it using a multi-threaded ingestion pipeline.
 
 The system uses:
 
@@ -11,6 +12,7 @@ The system uses:
 * PostgreSQL (Docker)
 * LinkedBlockingQueue for buffering
 * Producer–Consumer pattern for concurrency
+
 
 
 ## Prerequisites
@@ -49,6 +51,7 @@ Run the following command from the project root:
 docker compose up -d
 ```
 
+
 ### Step 2: Verify Database is Running
 
 ```bash
@@ -68,13 +71,11 @@ mypassword
 ```
 
 
-
 ### Step 3: Build the Project
 
 ```bash
 mvn clean compile
 ```
-
 
 
 ### Step 4: Run Tests and Generate Coverage
@@ -90,13 +91,11 @@ target/site/jacoco/index.html
 ```
 
 
-
 ### Step 5: Run the Application
 
 ```bash
 mvn exec:java -Dexec.mainClass="com.logitrack.App"
 ```
-
 
 
 ## Application Behavior
@@ -110,7 +109,6 @@ mvn exec:java -Dexec.mainClass="com.logitrack.App"
 
         * High humidity
         * Tamper detection
-
 
 
 ## Verifying Data
@@ -128,7 +126,6 @@ SELECT * FROM sensor_reading ORDER BY recorded_at DESC;
 ```
 
 New records should appear continuously.
-
 
 
 ## Stopping the Application
@@ -152,8 +149,6 @@ docker compose down -v
 docker compose up -d
 ```
 
-
-
 ## Key Concepts
 
 * JDBC abstraction using JdbcTemplate
@@ -166,11 +161,8 @@ docker compose up -d
 * Code coverage using JaCoCo
 
 
-
 ## Notes
 
 * The system simulates sensor data; no external hardware is required
 * Seed data is optional since the application generates data dynamically
 * Ensure the configured port is not already in use before starting Docker
-
-
