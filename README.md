@@ -4,7 +4,7 @@
 
 LogiTrack Pro is a backend system for tracking high-value electronics in warehouses.
 It simulates real-time sensor data such as GPS location, humidity, and tamper alerts,
-and processes it using a multi-threaded ingestion pipeline.
+and processes it using a multithreaded ingestion pipeline.
 
 The system uses:
 
